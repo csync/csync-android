@@ -164,7 +164,7 @@ csApp.listen(myKey)
 csApp.write(myKey, dataToWrite, <acl>);
 ```
 
-where `<acl>` can be any of the ACLs mentioned [above](https://github.ibm.com/csync/csync-android#access-controls). 
+where `<acl>` can be any of the ACLs mentioned [above](https://github.com/csync/csync-android#access-controls). 
 
 ## Deleting a key
 ```
