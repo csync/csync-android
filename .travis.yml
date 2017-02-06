@@ -15,7 +15,7 @@ before_install:
 before_script: 
   # Environment variables
   - awk -F"=" -v newval="\"$CSYNC_HOST\"" '/CSYNC_HOST/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
-  - awk -F"=" -v newval="\"$CSYNC_PORT\"" '/CSYNC_PORT/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
+  - awk -F"=" -v newval="$CSYNC_PORT" '/CSYNC_PORT/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
   - awk -F"=" -v newval="\"$CSYNC_DEMO_PROVIDER\"" '/CSYNC_DEMO_PROVIDER/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
   - awk -F"=" -v newval="\"$CSYNC_DEMO_TOKEN\"" '/CSYNC_DEMO_TOKEN/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
 jdk:
