@@ -3,7 +3,6 @@ android:
   components:
     #this does not actually install, hence the before_install code below
     - extra-android-m2repository
-
     # The BuildTools version used by your project
     - build-tools-23.0.1
     # The SDK version used to compile your project
@@ -13,10 +12,14 @@ before_install:
   - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
   # Fixes a permission bug
   - chmod +x gradlew
+before_script: 
+  # Environment variables
+  - awk -F"=" -v newval="\"$CSYNC_HOST\"" '/CSYNC_HOST/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
+  - awk -F"=" -v newval="\"$CSYNC_PORT\"" '/CSYNC_PORT/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
+  - awk -F"=" -v newval="\"$CSYNC_DEMO_PROVIDER\"" '/CSYNC_DEMO_PROVIDER/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
+  - awk -F"=" -v newval="\"$CSYNC_DEMO_TOKEN\"" '/CSYNC_DEMO_TOKEN/{$2=newval;print;next}1' OFS='=' keystore.properties > temp && mv temp keystore.properties
 jdk:
   - oraclejdk7
 branches:
   only:
-  - master
-  - develop
-  
+  - master  
