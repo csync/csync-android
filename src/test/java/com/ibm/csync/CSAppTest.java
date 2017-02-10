@@ -22,6 +22,7 @@ import com.ibm.csync.android.BuildConfig;
 
 import java.util.List;
 
+import java.util.UUID;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -156,4 +157,39 @@ public class CSAppTest {
     app.delete(key).subscribe(deleteSubscriber);
     deleteSubscriber.awaitTerminalEvent();
   }
+
+  @Test public void testDeleteWildcard() {
+    TestSubscriber<CSValue> listenSubscriber = new TestSubscriber<>();
+    TestSubscriber<Boolean> writeSubscriber = new TestSubscriber<>();
+    TestSubscriber<Boolean> deleteSubscriber = new TestSubscriber<>();
+    String uuid = UUID.randomUUID().toString();
+    CSKey key = CSKey.fromString("tests.android." + uuid + ".*");
+    app.listen(key).take(2).subscribe(listenSubscriber);
+    CSKey writeKey = CSKey.fromString("tests.android." + uuid + ".a");
+    String data = "helllo";
+    app.write(writeKey, data, ACL).subscribe(writeSubscriber);
+    writeSubscriber.awaitTerminalEvent();
+
+    app.delete(key).subscribe(deleteSubscriber);
+    deleteSubscriber.awaitTerminalEvent();
+    listenSubscriber.awaitTerminalEvent();
+    listenSubscriber.assertNoErrors();
+
+    assertEquals(true, deleteSubscriber.getOnNextEvents().get(0).booleanValue());
+
+    List<CSValue> receivedValues = listenSubscriber.getOnNextEvents();
+    assertEquals(2, receivedValues.size());
+
+    CSValue created = receivedValues.get(0);
+    CSValue deleted = receivedValues.get(1);
+
+    //Checked
+    assertTrue(created.key().matches(key));
+    assertTrue(!created.isKeyDeleted());
+
+    //Check deleted key
+    assertTrue(deleted.key().matches(key));
+    assertTrue(deleted.isKeyDeleted());
+  }
+
 }
