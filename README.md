@@ -177,7 +177,7 @@ where `<acl>` can be any of the ACLs mentioned [above](https://github.com/csync/
 ```
 csApp.delete(myKey);
 ```
-
+Note: A delete key can contain any number of wildcards as well. For example, the key a.b would be deleted by `a.*`, but the key `a.b.c` would not because the wildcard only covers the second part of the key. The key `a.b.c` could be deleted by `a.*.*`, `a.b.*`, `a.*.c`, `*.*.c` or `*.*.*`. The key `*.*.*` would delete all keys of length 3. Wildcard deletes make a best effort to delete everything you have access to. If you do not delete anything, you will still get a successful return because the server succesfully deleted all nodes you had access to, even if none existed.
 
 # License
 This library is licensed under Apache 2.0. Full license text is
